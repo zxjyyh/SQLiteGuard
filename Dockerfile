@@ -44,4 +44,4 @@ HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
     CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:5000/health')" || exit 1
 
 # 使用 waitress 作为生产 WSGI 服务器
-CMD ["waitress-serve", "--host=0.0.0.0", "--port=5000", "--threads=4", "app:create_app()"]
+CMD ["waitress-serve", "--host=0.0.0.0", "--port=5000", "--threads=4", "--call", "app:create_app"]
