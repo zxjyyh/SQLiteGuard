@@ -1,5 +1,6 @@
 from flask import Flask, send_from_directory
 from flask_cors import CORS
+from werkzeug.middleware.proxy_fix import ProxyFix
 from config import Config
 from database.db import init_db, seed_default_user, seed_demo_data
 import os
@@ -29,6 +30,9 @@ def create_app():
     # CORS: 生产环境应通过环境变量 CORS_ORIGINS 指定允许的域名
     cors_origins = os.getenv('CORS_ORIGINS', '*')
     CORS(app, resources={r"/api/*": {"origins": cors_origins}})
+
+    # 反向代理适配（绿联 NAS 等通过域名反代访问场景）
+    app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1)
 
     setup_logging(app)
     app.logger.info('个人数据管家启动中...')
