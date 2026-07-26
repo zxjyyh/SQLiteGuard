@@ -34,7 +34,18 @@ def import_csv(category_id):
     field_labels = [f['field_label'] for f in fields]
 
     try:
-        content = file.read().decode('utf-8-sig')
+        # 自动检测编码：依次尝试 utf-8-sig → gb18030 → gbk → gb2312
+        raw = file.read()
+        content = None
+        for enc in ['utf-8-sig', 'gb18030', 'gbk', 'gb2312']:
+            try:
+                content = raw.decode(enc)
+                break
+            except (UnicodeDecodeError, UnicodeError):
+                continue
+        if content is None:
+            conn.close()
+            return fail('无法识别CSV文件编码，请将文件另存为UTF-8编码')
         reader = csv.DictReader(io.StringIO(content))
 
         if not reader.fieldnames:
