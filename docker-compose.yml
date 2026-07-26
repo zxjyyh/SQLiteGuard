@@ -1,34 +1,23 @@
 version: "3.8"
 
 services:
-  mydb:
-    build: .
-    container_name: mydb
+  sqliteguard:
+    image: ghcr.io/zxjyyh/sqliteguard:latest
+    container_name: sqliteguard
     restart: unless-stopped
     ports:
       - "5000:5000"
     volumes:
-      # 持久化数据库和日志
+      # 数据持久化：改成 NAS 上的实际路径
       - ./data:/app/data
     environment:
       # ====== 必填 ======
-      # JWT 密钥（修改为你自己的随机字符串！）
-      - JWT_SECRET=请修改为你自己的随机密钥
-
+      # JWT 密钥（务必改成你自己的随机字符串！）
+      - JWT_SECRET=请修改为你自己的随机密钥至少32位
       # ====== 可选 ======
-      # 服务端口（默认 5000）
       # - PORT=5000
-      # 数据库路径（默认 /app/data/data.db）
-      # - DB_PATH=/app/data/data.db
-      # CORS 允许的域名（外网部署时改为你的域名）
-      - CORS_ORIGINS=*
-      # Debug 模式（生产环境务必保持 false）
-      - FLASK_DEBUG=false
-
-    # 可选：使用 host 网络模式（NAS 上有时更方便）
-    # network_mode: host
-
-    # 可选：健康检查
+      # - CORS_ORIGINS=*
+      # - FLASK_DEBUG=false
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
       interval: 30s
