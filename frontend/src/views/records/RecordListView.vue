@@ -1,6 +1,6 @@
 <template>
   <div class="page-container">
-    <div class="page-toolbar">
+    <div class="page-toolbar toolbar-sticky">
       <div class="toolbar-title">
         <el-button @click="$router.push('/dashboard')" text>
           <el-icon><ArrowLeft /></el-icon>
@@ -323,6 +323,17 @@ function handleSortChange() {}
 .toolbar-title { display: flex; align-items: center; gap: 8px; }
 .toolbar-title h3 { margin: 0; font-size: 16px; }
 .toolbar-actions { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+
+/* 置顶操作按钮区域 */
+.toolbar-sticky {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: #fff;
+  padding: 12px 0;
+  margin-bottom: 16px;
+  border-bottom: 1px solid #ebeef5;
+}
 
 :deep(.selected-row) { background-color: #ecf5ff !important; }
 :deep(.selected-row:hover > td) { background-color: #d9ecff !important; }
