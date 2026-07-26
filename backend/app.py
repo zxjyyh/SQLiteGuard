@@ -60,13 +60,24 @@ def create_app():
     # Serve frontend static files in production
     frontend_dist = os.path.join(os.path.dirname(__file__), '..', 'frontend', 'dist')
     if os.path.exists(frontend_dist):
-        @app.route('/', defaults={'path': ''})
+        @app.route('/')
+        def serve_index():
+            return send_from_directory(frontend_dist, 'index.html')
+
+        @app.route('/assets/<path:path>')
+        def serve_assets(path):
+            return send_from_directory(frontend_dist, f'assets/{path}')
+
+        # 反向代理调试：记录实际收到的请求
         @app.route('/<path:path>')
         def serve_frontend(path):
             # API 请求全部放过，交给蓝图处理
             if path.startswith('api/'):
                 from werkzeug.exceptions import NotFound
                 raise NotFound()
+            # 打到这说明是反向代理请求——记录实际路径
+            from flask import request as _req
+            app.logger.info(f'前端路由 path={path!r} full_url={_req.url!r} base_url={_req.base_url!r} script_name={_req.script_root!r}')
             file_path = os.path.join(frontend_dist, path)
             if path and os.path.isfile(file_path):
                 return send_from_directory(frontend_dist, path)
