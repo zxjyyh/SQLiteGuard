@@ -1,0 +1,29 @@
+# 开发环境文件
+frontend/node_modules/
+frontend/dist/
+.vscode/
+.idea/
+*.pyc
+__pycache__/
+
+# 本地数据（不要打包进镜像）
+backend/data/
+*.log
+
+# Git
+.git/
+.gitignore
+
+# 环境变量文件（含敏感信息）
+.env
+*.env.local
+
+# 系统文件
+.DS_Store
+Thumbs.db
+.workbuddy/
+
+# 临时文件
+*.tmp
+*.swp
+*.swo
