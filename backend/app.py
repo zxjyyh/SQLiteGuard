@@ -58,7 +58,11 @@ def create_app():
     app.register_blueprint(dashboard_bp, url_prefix='/api/dashboard')
 
     # Serve frontend static files in production
-    frontend_dist = os.path.join(os.path.dirname(__file__), '..', 'frontend', 'dist')
+    _base = os.path.dirname(os.path.abspath(__file__))
+    # 兼容两种部署方式：本地开发（backend/ 子目录）和 Docker（直接同级目录）
+    frontend_dist = os.path.join(_base, '..', 'frontend', 'dist')
+    if not os.path.isdir(frontend_dist):
+        frontend_dist = os.path.join(_base, 'frontend', 'dist')
     if os.path.exists(frontend_dist):
         @app.route('/')
         def serve_index():
