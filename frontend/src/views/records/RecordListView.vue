@@ -56,7 +56,9 @@
               autofocus
             />
           </div>
-          <span v-else class="cell-value">{{ row[field.field_key] || '-' }}</span>
+          <span v-else class="cell-value">
+            {{ editMap[row.id]?.[field.field_key] !== undefined ? editMap[row.id][field.field_key] : (row[field.field_key] || '-') }}
+          </span>
         </template>
       </el-table-column>
       <el-table-column label="提醒" width="60" align="center">
