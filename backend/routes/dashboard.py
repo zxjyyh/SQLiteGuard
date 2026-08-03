@@ -40,9 +40,15 @@ def get_stats():
         "SELECT COUNT(*) FROM reminders WHERE is_active = 1 AND next_remind_at > ?",
         (now,)
     ).fetchone()[0]
+    # 已到期待处理的提醒（铃铛角标用）
+    overdue_count = conn.execute(
+        "SELECT COUNT(*) FROM reminders WHERE is_active = 1 AND next_remind_at <= ?",
+        (now,)
+    ).fetchone()[0]
 
     conn.close()
     return success({
         'categories': stats,
-        'pendingCount': pending_count
+        'pendingCount': pending_count,
+        'overdueCount': overdue_count
     })

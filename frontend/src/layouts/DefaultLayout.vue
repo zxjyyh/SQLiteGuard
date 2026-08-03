@@ -125,7 +125,7 @@ onMounted(async () => {
   try {
     const [catRes, statsRes] = await Promise.all([categoryApi.list(), dashboardApi.stats()])
     categories.value = catRes.data || []
-    dueCount.value = statsRes.data.pendingCount || 0
+    dueCount.value = statsRes.data.overdueCount || 0
   } catch {}
 })
 
@@ -133,7 +133,7 @@ onUnmounted(() => { window.removeEventListener('resize', onResize) })
 
 watch(() => route.path, async () => {
   if (route.path === '/dashboard') {
-    try { const s = await dashboardApi.stats(); dueCount.value = s.data.pendingCount || 0 } catch {}
+    try { const s = await dashboardApi.stats(); dueCount.value = s.data.overdueCount || 0 } catch {}
   }
 })
 </script>
